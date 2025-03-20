@@ -1,6 +1,8 @@
 package com.jpacourse.persistance.entity;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import jakarta.persistence.*;
 
@@ -28,6 +30,15 @@ public class PatientEntity {
 
 	@Column(nullable = false)
 	private LocalDate dateOfBirth;
+
+	private Boolean insured;
+
+	@OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<VisitEntity> visits = new ArrayList<>();
+
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+	@JoinColumn(name = "patient_id")
+	private List<AddressEntity> addresses = new ArrayList<>();
 
 	public Long getId() {
 		return id;
@@ -83,6 +94,48 @@ public class PatientEntity {
 
 	public void setDateOfBirth(LocalDate dateOfBirth) {
 		this.dateOfBirth = dateOfBirth;
+	}
+
+	public Boolean getInsured() {
+		return insured;
+	}
+
+	public void setInsured(Boolean insured) {
+		this.insured = insured;
+	}
+
+	public List<VisitEntity> getVisits() {
+		return visits;
+	}
+
+	public void setVisits(List<VisitEntity> visits) {
+		this.visits = visits;
+	}
+
+	public void addVisit(VisitEntity visit) {
+		visits.add(visit);
+		visit.setPatient(this);
+	}
+
+	public void removeVisit(VisitEntity visit) {
+		visits.remove(visit);
+		visit.setPatient(null);
+	}
+
+	public List<AddressEntity> getAddresses() {
+		return addresses;
+	}
+
+	public void setAddresses(List<AddressEntity> addresses) {
+		this.addresses = addresses;
+	}
+
+	public void addAddress(AddressEntity address) {
+		addresses.add(address);
+	}
+
+	public void removeAddress(AddressEntity address) {
+		addresses.remove(address);
 	}
 
 }
