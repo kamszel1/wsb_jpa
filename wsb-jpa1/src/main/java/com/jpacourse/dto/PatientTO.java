@@ -14,7 +14,7 @@ public class PatientTO implements Serializable
     private String email;
     private String patientNumber;
     private LocalDate dateOfBirth;
-    private Boolean insured;
+    private LocalDate registrationDate;
     private List<VisitTO> visits = new ArrayList<>();
 
     public Long getId() {
@@ -73,12 +73,12 @@ public class PatientTO implements Serializable
         this.dateOfBirth = dateOfBirth;
     }
 
-    public Boolean getInsured() {
-        return insured;
+    public LocalDate getRegistrationDate() {
+        return registrationDate;
     }
 
-    public void setInsured(Boolean insured) {
-        this.insured = insured;
+    public void setRegistrationDate(LocalDate registrationDate) {
+        this.registrationDate = registrationDate;
     }
 
     public List<VisitTO> getVisits() {

@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 @Entity
 @Table(name = "PATIENT")
@@ -31,10 +33,15 @@ public class PatientEntity {
 	@Column(nullable = false)
 	private LocalDate dateOfBirth;
 
-	private Boolean insured;
+	@Column(nullable = false)
+	private LocalDate registrationDate;
 
-	@OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+	@Fetch(FetchMode.SELECT)
 	private List<VisitEntity> visits = new ArrayList<>();
+
+	//przy JOIN wykonywane jest jedno wspólne zapytanie dla encji, pobierając też wizyty i powiązane z nimi MedicalTreatment przy użyciu left join
+	//dla SELECT więcej zapytań, do każdej z tabel osobno,
 
 	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
 	@JoinColumn(name = "patient_id")
@@ -96,12 +103,12 @@ public class PatientEntity {
 		this.dateOfBirth = dateOfBirth;
 	}
 
-	public Boolean getInsured() {
-		return insured;
+	public LocalDate getRegistrationDate() {
+		return registrationDate;
 	}
 
-	public void setInsured(Boolean insured) {
-		this.insured = insured;
+	public void setRegistrationDate(LocalDate registrationDate) {
+		this.registrationDate = registrationDate;
 	}
 
 	public List<VisitEntity> getVisits() {
