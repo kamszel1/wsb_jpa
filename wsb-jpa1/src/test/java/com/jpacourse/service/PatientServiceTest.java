@@ -3,8 +3,10 @@ package com.jpacourse.service;
 import com.jpacourse.dto.PatientTO;
 import com.jpacourse.dto.VisitTO;
 import com.jpacourse.persistance.dao.PatientDao;
+import com.jpacourse.persistance.entity.DoctorEntity;
 import com.jpacourse.persistance.entity.MedicalTreatmentEntity;
 import com.jpacourse.persistance.entity.PatientEntity;
+import com.jpacourse.persistance.entity.VisitEntity;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -90,6 +92,34 @@ public class PatientServiceTest {
         assertTrue(visits.stream().allMatch(v -> v.getTime() != null));
         assertTrue(visits.stream().allMatch(v -> v.getDoctorFirstName() != null));
         assertTrue(visits.stream().allMatch(v -> v.getDoctorLastName() != null));
+    }
+
+    @Test
+    public void testDeletePatientAndVisits() {
+        Long patientId = 1L;
+        Long doctorId = 1L;
+
+        PatientEntity patient = entityManager.find(PatientEntity.class, patientId);
+        DoctorEntity doctor = entityManager.find(DoctorEntity.class, doctorId);
+        List<VisitEntity> visits = patient.getVisits();
+
+        assertThat(patient).isNotNull();
+        assertThat(doctor).isNotNull();
+        assertThat(visits).isNotEmpty();
+
+        patientService.deleteById(patientId);
+
+        PatientEntity deletedPatient = entityManager.find(PatientEntity.class, patientId);
+        assertThat(deletedPatient).isNull();
+
+        List<VisitEntity> remainingVisits = entityManager.createQuery(
+                        "SELECT v FROM VisitEntity v WHERE v.patient.id = :patientId", VisitEntity.class)
+                .setParameter("patientId", patientId)
+                .getResultList();
+        assertThat(remainingVisits).isEmpty();
+
+        DoctorEntity remainingDoctor = entityManager.find(DoctorEntity.class, doctorId);
+        assertThat(remainingDoctor).isNotNull();
     }
 
 
