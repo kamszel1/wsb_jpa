@@ -22,7 +22,7 @@ public final class PatientMapper
         patientTO.setEmail(patientEntity.getEmail());
         patientTO.setPatientNumber(patientEntity.getPatientNumber());
         patientTO.setDateOfBirth(patientEntity.getDateOfBirth());
-        patientTO.setInsured(patientEntity.getInsured());
+        patientTO.setRegistrationDate(patientEntity.getRegistrationDate());
         
         if (patientEntity.getVisits() != null) {
             patientTO.setVisits(patientEntity.getVisits().stream()
@@ -45,7 +45,7 @@ public final class PatientMapper
         patientEntity.setEmail(patientTO.getEmail());
         patientEntity.setPatientNumber(patientTO.getPatientNumber());
         patientEntity.setDateOfBirth(patientTO.getDateOfBirth());
-        patientEntity.setInsured(patientTO.getInsured());
+        patientEntity.setRegistrationDate(patientTO.getRegistrationDate());
 
         return patientEntity;
     }
